@@ -1,0 +1,3 @@
+#!/bin/sh
+gcc main.cpp -o doom -lglut -lGL -lGLU -lm
+./doom

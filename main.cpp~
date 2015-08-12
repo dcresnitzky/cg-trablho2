@@ -1,0 +1,146 @@
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
+
+GLfloat Yx = 0, Yy = 0, Yz = 5, fov = 60;
+GLint view_w, view_h;
+
+void init(void)
+{
+GLfloat lightPosition [] = {10.0, 10.0, 10.0, 0.0};
+GLfloat ambientColor [] = {1.0, 1.0, 1.0, 1.0};
+GLfloat mat_specular [] = {0, 0, 1, 1.0};
+GLfloat mat_shininess [] = {10.0};
+glClearColor (0.0, 0.0, 0.0, 0.0);
+glShadeModel (GL_SMOOTH);
+
+glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+
+glEnable(GL_LIGHTING);
+glEnable(GL_LIGHT0);
+glEnable(GL_DEPTH_TEST);
+glEnable(GL_COLOR_MATERIAL);
+}
+void display(void)
+{
+glClear (GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+glColor3f (0.0, 1.0, 0.0);
+glLoadIdentity (); /* clear the matrix */
+/* viewing transformation */
+
+//gluLookAt (0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+gluLookAt (Yx, Yy, Yz, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+glScalef (1.0, 2.0, 1.0); /* modeling transformation */
+//glutWireCube (1.0);
+glTranslatef(-1, 0, 0);
+glutSolidTeapot(0.5);
+glTranslatef(2, 0, 0);
+glutSolidCube(0.5);
+glutSwapBuffers();
+}
+
+
+void reshape (int w, int h)
+{
+glViewport (0, 0, (GLsizei) w, (GLsizei) h);
+view_w = w;
+view_h = h;
+glMatrixMode (GL_PROJECTION);
+glLoadIdentity ();
+//glFrustum (-1.0, 1.0, -1.0, 1.0, 1.5, 20.0);
+gluPerspective(fov, (GLfloat)view_w / (GLfloat)view_h, 1.5, 20.0);
+glMatrixMode (GL_MODELVIEW);
+}
+
+// Função callback chamada para gerenciar eventos de teclado
+void GerenciaTeclado(unsigned char key, int x, int y)
+{
+    GLfloat whiteLight [] = {1.0, 1.0, 1.0, 1.0};
+    GLfloat blackLight [] = {0.0, 0.0, 0.0, 0.0};
+    switch (key) {
+            case 'X':
+                 Yx += 0.1;
+                 break;
+            case 'x':
+                 Yx -= 0.1;
+                 break;
+            case 'Y':
+                 Yy += 0.1;
+                 break;
+            case 'y':
+                 Yy -= 0.1;
+                 break;
+            case 'Z':
+                 Yz += 0.1;
+                 break;
+            case 'z':
+                 Yz -= 0.1;
+                 break;
+            case 'r':
+                 Yx = 0;
+                 Yy = 0;
+                 Yz = 5;
+                 break;
+            case '+':
+                 if (fov < 180)
+                   fov += 1;
+                 break;
+            case '-':
+                 if (fov > 0)
+                   fov -= 1;
+                 break;
+            case ' ':
+                 exit(0);
+            case 's':
+                 glDisable(GL_LIGHT0);
+                 whiteLight[3] = 0.0;
+                 glLightfv(GL_LIGHT0, GL_SPECULAR, whiteLight);
+                 glLightfv(GL_LIGHT0, GL_DIFFUSE, blackLight);
+                 glLightfv(GL_LIGHT0, GL_AMBIENT, blackLight);
+                 glEnable(GL_LIGHT0);
+                 break;
+            case 'd':
+                 glDisable(GL_LIGHT0);
+                 whiteLight[3] = 1.0;
+                 glLightfv(GL_LIGHT0, GL_SPECULAR, blackLight);
+                 glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteLight);
+                 glLightfv(GL_LIGHT0, GL_AMBIENT, blackLight);
+                 glEnable(GL_LIGHT0);
+                 break;
+            case 'a':
+                 glDisable(GL_LIGHT0);
+                 whiteLight[3] = 1.0;
+                 glLightfv(GL_LIGHT0, GL_SPECULAR, blackLight);
+                 glLightfv(GL_LIGHT0, GL_DIFFUSE, blackLight);
+                 glLightfv(GL_LIGHT0, GL_AMBIENT, whiteLight);
+                 glEnable(GL_LIGHT0);
+                 break;
+            case 'o':
+                 if ( glIsEnabled(GL_LIGHT0) ){
+                      glDisable(GL_LIGHT0);
+                 }else{
+                      glEnable(GL_LIGHT0);
+                 }
+                 break;
+    }
+
+    glutPostRedisplay();
+    reshape(view_w, view_h);
+}
+
+int main(int argc, char** argv)
+{
+glutInit(&argc, argv);
+glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+glutInitWindowSize (500, 500);
+glutInitWindowPosition (100, 100);
+glutCreateWindow (argv[0]);
+init ();
+glutDisplayFunc(display);
+glutReshapeFunc(reshape);
+glutKeyboardFunc(GerenciaTeclado);
+glutMainLoop();
+return 0;
+}

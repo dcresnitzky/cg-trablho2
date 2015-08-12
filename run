@@ -1,0 +1,3 @@
+#!/bin/sh
+gcc main.cpp -o traffic -lglut -lGL -lGLU -lm 
+./traffic
