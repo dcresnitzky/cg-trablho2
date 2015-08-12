@@ -11,20 +11,7 @@
 
 
 #include "traffic.h"
-// angle of rotation for the camera direction
-float angle = 0.0f;
 
-// actual vector representing the camera's direction
-float lx=0.0f,lz=-1.0f;
-
-// XZ position of the camera
-float x=0.0f, z=5.0f;
-
-// the key states. These variables will be zero
-//when no key is being presses
-float deltaAngle = 0.0f;
-float deltaMove = 0;
-int xOrigin = -1;
 
 // scale of snowman
 float scale = 1.0f;
@@ -33,9 +20,6 @@ float scale = 1.0f;
 float red = 1.0f;
 float green = 0.5f;
 float blue = 0.5f;
-
-// MOUSE
-bool capture = false;
 
 
 void changeSize(int w, int h) {
@@ -94,12 +78,6 @@ void drawSnowMan() {
 }
 
 
-void computePos(float deltaMove) {
-
-    x += deltaMove * lx * 0.1f;
-    z += deltaMove * lz * 0.1f;
-}
-
 void renderScene(void) {
 
     if (deltaMove)
@@ -136,99 +114,6 @@ void renderScene(void) {
         }
     glutSwapBuffers();
 }
-
-// -----------------------------------
-//             KEYBOARD
-// -----------------------------------
-
-void processNormalKeys(unsigned char key, int xx, int yy) {
-
-    switch (key) {
-        case 27:
-            exit(0);
-            break;
-        case 'z':
-            capture = !capture;
-            break;
-    }
-}
-
-void pressKey(int key, int xx, int yy) {
-
-    switch (key) {
-        case GLUT_KEY_UP : deltaMove = 0.5f; break;
-        case GLUT_KEY_DOWN : deltaMove = -0.5f; break;
-    }
-}
-
-void releaseKey(int key, int x, int y) {
-
-    switch (key) {
-        case GLUT_KEY_UP :
-        case GLUT_KEY_DOWN : deltaMove = 0;break;
-    }
-}
-
-// -----------------------------------
-//             MOUSE
-// -----------------------------------
-
-void passiveMotion( int x, int y )
-{
-    static bool warped = false;
-    if( warped )
-    {
-        warped = false;
-        return;
-    }
-
-    if( capture )
-    {
-        warped = true;
-        int w = glutGet( GLUT_WINDOW_WIDTH );
-        int h = glutGet( GLUT_WINDOW_HEIGHT );
-        glutWarpPointer( w / 2, h / 2 );
-
-        int dx = ( w / 2 ) - x;
-        int dy = ( h / 2 ) - y;
-        printf("b%i b%i ",dx,dy);
-    }
-    else
-    {
-        printf("a%i a%i ",x,y);
-    }
-}
-
-void mouseMove(int x, int y) {
-
-    // this will only be true when the left button is down
-    if (xOrigin >= 0) {
-
-        // update deltaAngle
-        deltaAngle = (x - xOrigin) * 0.001f;
-
-        // update camera's direction
-        lx = sin(angle + deltaAngle);
-        lz = -cos(angle + deltaAngle);
-    }
-}
-
-void mouseButton(int button, int state, int x, int y) {
-
-    // only start motion if the left button is pressed
-    if (button == GLUT_LEFT_BUTTON) {
-
-        // when the button is released
-        if (state == GLUT_UP) {
-            angle += deltaAngle;
-            xOrigin = -1;
-        }
-        else  {// state = GLUT_DOWN
-            xOrigin = x;
-        }
-    }
-}
-
 
 // -----------------------------------
 //             MAIN
