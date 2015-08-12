@@ -1,13 +1,3 @@
-// the key states. These variables will be zero when no key is being presses
-float deltaAngle = 0.0f;
-float deltaMove = 0;
-int xOrigin = -1;
-
-// Captura do mouse para mover a camera.
-bool capture = true;
-
-
-
 // -----------------------------------
 //             TECLADO
 // -----------------------------------
@@ -44,8 +34,8 @@ void releaseKey(int key, int x, int y) {
 //             MOUSE
 // -----------------------------------
 
-void passiveMotion( int x, int y )
-{
+void passiveMotion( int x, int y ){
+
     static bool warped = false;
     if( warped )
     {
@@ -62,7 +52,12 @@ void passiveMotion( int x, int y )
 
         int dx = ( w / 2 ) - x;
         int dy = ( h / 2 ) - y;
-        printf("b%i b%i ",dx,dy);
+        
+        deltaAngle = (x - xOrigin) * 0.001f;
+
+        // update camera's direction
+        lx = sin(angle + deltaAngle);
+        lz = -cos(angle + deltaAngle);
     }
     else
     {
