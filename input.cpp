@@ -5,6 +5,7 @@
 void processNormalKeys(unsigned char key, int xx, int yy) {
 
     switch (key) {
+    	// Esc
         case 27:
             exit(0);
             break;
@@ -37,6 +38,7 @@ void releaseKey(int key, int x, int y) {
 void passiveMotion( int x, int y ){
 
     static bool warped = false;
+
     if( warped )
     {
         warped = false;
@@ -45,38 +47,47 @@ void passiveMotion( int x, int y ){
 
     if( capture )
     {
-        warped = true;
-        int w = glutGet( GLUT_WINDOW_WIDTH );
-        int h = glutGet( GLUT_WINDOW_HEIGHT );
-        glutWarpPointer( w / 2, h / 2 );
+        warped = true;        
+        int metade_width = width/2;
+        int metade_height = height/2;
+        if ( x > metade_width ){
+        	deltaAngle += sensibilidade;
+        }
+        else {
+        	deltaAngle = -sensibilidade;
 
-        int dx = ( w / 2 ) - x;
-        int dy = ( h / 2 ) - y;
+        }
+        angle += deltaAngle;
+	    // update camera's direction
+	    lx = sin(angle + deltaAngle);
+	    lz = -cos(angle + deltaAngle);
+
+        // Trava o mouse no centro da tela
+        glutWarpPointer( width/2 , height/2 );
         
-        deltaAngle = (x - xOrigin) * 0.001f;
-
-        // update camera's direction
-        lx = sin(angle + deltaAngle);
-        lz = -cos(angle + deltaAngle);
     }
     else
     {
-        printf("a%i a%i ",x,y);
+    	glutSetCursor(GLUT_CURSOR_CROSSHAIR);
     }
 }
 
 void mouseMove(int x, int y) {
+   
+        int metade_width = width/2;
+        int metade_height = height/2;
+        if ( x > metade_width ){
+        	deltaAngle += sensibilidade;
+        }
+        else {
+        	deltaAngle = -sensibilidade;
 
-    // this will only be true when the left button is down
-    if (xOrigin >= 0) {
+        }
+        angle += deltaAngle;
+	    // update camera's direction
+	    lx = sin(angle + deltaAngle);
+	    lz = -cos(angle + deltaAngle);
 
-        // update deltaAngle
-        deltaAngle = (x - xOrigin) * 0.001f;
-
-        // update camera's direction
-        lx = sin(angle + deltaAngle);
-        lz = -cos(angle + deltaAngle);
-    }
 }
 
 void mouseButton(int button, int state, int x, int y) {

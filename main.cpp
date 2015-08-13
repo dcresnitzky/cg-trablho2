@@ -27,7 +27,11 @@ int xOrigin = -1;
 
 // Captura do mouse para mover a camera.
 bool capture = true;
+float sensibilidade = 0.001f;
 
+// Tamanho do Viewport
+int width;
+int height;
 
 // -----------------------------------
 //             MAIN
@@ -35,33 +39,49 @@ bool capture = true;
 
 int main(int argc, char **argv) {
 
-    // init GLUT and create window
+    // Inicializacao do GLUT 
     glutInit(&argc, argv);
+    // Cria janela utilizando Profundidade, Double Buffer e modo de cores RGBA.
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-    glutInitWindowPosition(100,100);
-    glutInitWindowSize(320,320);
+    // Cria Janela e coloca no modo tela cheia.
     glutCreateWindow("Traffic");
     glutFullScreen();
-    // register callbacks
+    //
+    // -----------------------------------
+    //             GLUT.CPP
+    // -----------------------------------
+    //
+    // Cria a cena com a funcao renderScene
     glutDisplayFunc(renderScene);
+    // Callback para redimensionamento de janela
     glutReshapeFunc(changeSize);
-    glutIdleFunc(renderScene);
-    glutSetCursor(GLUT_CURSOR_CROSSHAIR);
-
+    // Prepara para a nova renderizacao
+    glutIdleFunc(glutPostRedisplay);
+    //
+    // -----------------------------------
+    //             INPUT.CPP
+    // -----------------------------------
+    //
+    // Desabilita o cursor do mouse.
+    glutSetCursor(GLUT_CURSOR_NONE);
+    //
+    // Ignora o callback para repeticao de teclas
     glutIgnoreKeyRepeat(1);
+    // Callback para as teclas do teclado
     glutKeyboardFunc(processNormalKeys);
     glutSpecialFunc(pressKey);
     glutSpecialUpFunc(releaseKey);
-
+    //
     // here are the two new functions
     //glutMouseFunc(mouseButton);
-    //glutMotionFunc(mouseMove);
+    glutMotionFunc(passiveMotion);
     glutPassiveMotionFunc( passiveMotion );
-
+    
+    //
     // OpenGL init
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-
+    //
     // enter GLUT event processing cycle
     glutMainLoop();
 

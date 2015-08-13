@@ -1,6 +1,6 @@
 void changeSize(int w, int h) {
 
-    // Prevent a divide by zero, when window is too short
+    // Previni uma divisao por 0 quando o height 
     // (you cant make a window of zero width).
     if (h == 0)
         h = 1;
@@ -21,12 +21,23 @@ void changeSize(int w, int h) {
 
     // Get Back to the Modelview
     glMatrixMode(GL_MODELVIEW);
+
+    width = w;
+    height = h;
 }
+
+void computePos(float deltaMove) {
+
+    x += deltaMove * lx * 0.1f;
+    z += deltaMove * lz * 0.1f; 
+}
+
 
 void renderScene(void) {
 
-    if (deltaMove)
+    if (deltaMove){
         computePos(deltaMove);
+    }
 
     // Clear Color and Depth Buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

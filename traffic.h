@@ -6,11 +6,11 @@
 #include <math.h>
 // Stdlib
 #include <stdlib.h>
-
 // Stdio para escrever no console.
 #include <stdio.h>
+
 // -----------------------------------
-//             CAMERA.CPP
+//             CAMERA
 // -----------------------------------
 
 // angle of rotation for the camera direction
@@ -20,11 +20,12 @@ extern float angle;
 extern float lx;
 extern float lz;
 
-// XZ position of the camera
+// Posicao da camera no plano
 extern float x,z;
 
+
 // -----------------------------------
-//             INPUT.CPP
+//             INPUT
 // -----------------------------------
 
 // the key states. These variables will be zero when no key is being presses
@@ -34,10 +35,21 @@ extern int xOrigin;
 
 // Captura do mouse para mover a camera.
 extern bool capture;
+// Sensibildiade do mouse
+extern float sensibilidade;
 
 
-// Camera
-#include "camera.cpp"
+// -----------------------------------
+//             GLUT
+// -----------------------------------
+// Tamanho do viewport
+extern int width;
+extern int height;
+
+// -----------------------------------
+//             FUNCOES
+// -----------------------------------
+
 // Teclado/Mouse
 #include "input.cpp"
 // Carros
